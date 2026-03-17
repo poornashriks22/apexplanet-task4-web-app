@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poornashri | Smart Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#7c3aed;
+  --accent:#22d3ee;
+  --dark:#0f172a;
+  --card:rgba(255,255,255,0.08);
+  --text:#fff;
+}
+.light{
+  --dark:#f1f5f9;
+  --card:#ffffff;
+  --text:#111;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{
+  background:url('https://images.unsplash.com/photo-1518770660439-4636190af475') no-repeat center/cover;
+  color:var(--text);
+}
+.overlay{
+  background:rgba(0,0,0,0.7);
+}
+header{
+  display:flex;justify-content:space-between;padding:20px 40px;
+  position:sticky;top:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);
+}
+nav a{margin-left:20px;color:white;text-decoration:none}
+.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.hero h1{font-size:3.5rem;font-family:'Playfair Display'}
+.hero span{color:var(--accent)}
+.btn{margin-top:20px;padding:12px 25px;border:none;background:var(--primary);color:white;border-radius:8px;cursor:pointer}
+section{padding:60px 40px}
+.title{text-align:center;margin-bottom:30px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.card{
+  background:var(--card);
+  padding:20px;border-radius:15px;
+  backdrop-filter:blur(12px);
+  transition:.3s;
+}
+.card:hover{transform:scale(1.05)}
+input,select{
+  width:100%;padding:10px;margin:10px 0;border:none;border-radius:8px
+}
+button{
+  padding:8px 12px;border:none;border-radius:6px;background:var(--accent);color:black;cursor:pointer
+}
+.product{
+  padding:10px;margin:10px 0;background:rgba(255,255,255,0.1);border-radius:10px
+}
+footer{text-align:center;padding:20px}
+</style>
+</head>
+<body>
+<div class="overlay">
+
+<header>
+<h2>Poornashri</h2>
+<nav>
+<a href="#about">About</a>
+<a href="#projects">Workspace</a>
+<a href="#contact">Contact</a>
+<button onclick="toggleMode()">🌙</button>
+</nav>
+</header>
+
+<div class="hero">
+<h1>Hello, I'm <span>Poornashri</span></h1>
+<p>Smart Developer • Creative Thinker • UI Designer</p>
+<button class="btn" onclick="scrollToSection('projects')">Explore Workspace</button>
+</div>
+
+<section id="about">
+<h2 class="title">About Me</h2>
+<p style="text-align:center;max-width:600px;margin:auto">I am Poornashri, a passionate and dedicated web developer with a strong interest in creating modern, user-friendly, and visually appealing web applications.
+I enjoy transforming ideas into reality through clean and efficient code.
+
+With a solid foundation in HTML, CSS, and JavaScript, I focus on building responsive and interactive websites that provide a seamless user experience across all devices.
+I believe that a great website is not just about design, but also about functionality and performance.
+
+I have developed projects that integrate data persistence using localStorage, dynamic filtering systems, and real-time user interactions.
+My work reflects my ability to combine creativity with technical skills to deliver meaningful solutions.
+
+I am particularly interested in designing smart digital workspaces that help users stay organized, productive, and efficient.
+Through my projects, I aim to solve real-world problems with simple yet powerful solutions.
+
+I continuously strive to improve my skills by exploring new technologies, learning best practices, and building innovative projects.
+I am also passionate about writing clean, maintainable code and following modern development standards.
+
+As a learner and a creator, I am always open to new challenges and opportunities that help me grow both personally and professionally.
+I strongly believe that consistency, curiosity, and creativity are the keys to success in the tech world.
+
+My goal is to become a skilled developer who can build impactful digital products and contribute to meaningful projects.</p>
+</section>
+
+<section id="projects">
+<h2 class="title">Smart Workspace</h2>
+<div class="grid">
+
+<div class="card">
+<h3>Task Manager</h3>
+<input id="taskInput" placeholder="Add task">
+<button onclick="addTask()">Add</button>
+<ul id="taskList"></ul>
+</div>
+
+<div class="card">
+<h3>Notes</h3>
+<input id="noteInput" placeholder="Write note">
+<button onclick="addNote()">Save</button>
+<ul id="noteList"></ul>
+</div>
+
+<div class="card">
+<h3>Product Explorer</h3>
+<select id="filter" onchange="applyFilters()">
+<option value="all">All</option>
+<option value="low">Below ₹500</option>
+<option value="high">Above ₹500</option>
+</select>
+<select id="sort" onchange="applyFilters()">
+<option value="default">Sort</option>
+<option value="lowHigh">Low-High</option>
+<option value="highLow">High-Low</option>
+</select>
+<div id="products"></div>
+</div>
+
+</div>
+</section>
+
+<section id="contact">
+<h2 class="title">Contact</h2>
+<input placeholder="Your Name">
+<input placeholder="Your Email">
+<button onclick="alert('Message Sent!')">Send</button>
+</section>
+
+<footer>
+<p>© 2026 Poornashri</p>
+</footer>
+
+</div>
+
+<script>
+function scrollToSection(id){
+ document.getElementById(id).scrollIntoView({behavior:'smooth'});
+}
+
+function toggleMode(){
+ document.body.classList.toggle('light');
+}
+
+// TASKS
+function addTask(){
+ let input=document.getElementById('taskInput');
+ if(!input.value)return;
+ let tasks=JSON.parse(localStorage.getItem('tasks'))||[];
+ tasks.push(input.value);
+ localStorage.setItem('tasks',JSON.stringify(tasks));
+ input.value='';
+ loadTasks();
+}
+function loadTasks(){
+ let tasks=JSON.parse(localStorage.getItem('tasks'))||[];
+ let list=document.getElementById('taskList');
+ list.innerHTML='';
+ tasks.forEach((t,i)=>{
+ list.innerHTML+=`<li>${t} <button onclick="deleteTask(${i})">X</button></li>`;
+ });
+}
+function deleteTask(i){
+ let tasks=JSON.parse(localStorage.getItem('tasks'));
+ tasks.splice(i,1);
+ localStorage.setItem('tasks',JSON.stringify(tasks));
+ loadTasks();
+}
+loadTasks();
+
+// NOTES
+function addNote(){
+ let input=document.getElementById('noteInput');
+ if(!input.value)return;
+ let notes=JSON.parse(localStorage.getItem('notes'))||[];
+ notes.push(input.value);
+ localStorage.setItem('notes',JSON.stringify(notes));
+ input.value='';
+ loadNotes();
+}
+function loadNotes(){
+ let notes=JSON.parse(localStorage.getItem('notes'))||[];
+ let list=document.getElementById('noteList');
+ list.innerHTML='';
+ notes.forEach(n=>{
+ list.innerHTML+=`<li>${n}</li>`;
+ });
+}
+loadNotes();
+
+// PRODUCTS
+let items=[
+{name:'Laptop',price:55000},{name:'Headphones',price:300},{name:'Shoes',price:1200},
+{name:'Watch',price:2500},{name:'Phone',price:15000},{name:'Keyboard',price:700},
+{name:'Mouse',price:400},{name:'Bag',price:900},{name:'Book',price:200}
+];
+
+function applyFilters(){
+ let f=document.getElementById('filter').value;
+ let s=document.getElementById('sort').value;
+ let data=[...items];
+ if(f=='low') data=data.filter(p=>p.price<500);
+ if(f=='high') data=data.filter(p=>p.price>=500);
+ if(s=='lowHigh') data.sort((a,b)=>a.price-b.price);
+ if(s=='highLow') data.sort((a,b)=>b.price-a.price);
+ displayProducts(data);
+}
+
+function displayProducts(data){
+ let c=document.getElementById('products');
+ c.innerHTML='';
+ data.forEach(p=>{
+ c.innerHTML+=`<div class='product'>${p.name} - ₹${p.price}</div>`;
+ });
+}
+
+displayProducts(items);
+</script>
+
+</body>
+</html>
